@@ -26,13 +26,13 @@
     <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabs_calibracion">
     <attribute name="title">
      <string>Calibracion</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="boton_siguiente_tag1">
      <property name="geometry">
       <rect>
        <x>-10</x>
@@ -52,12 +52,42 @@
       <string>Siguiente</string>
      </property>
     </widget>
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>-1</y>
+       <width>391</width>
+       <height>531</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="antes_calibracion_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>0</y>
+       <width>391</width>
+       <height>531</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="despues_calibracion_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_histogramas">
     <attribute name="title">
      <string>Histogramas</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton_tab_histogramas">
+    <widget class="QPushButton" name="boton_siguiente_tag2">
      <property name="geometry">
       <rect>
        <x>-10</x>
@@ -76,13 +106,73 @@
      <property name="text">
       <string>Siguiente</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>391</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="histograma_antes_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_4">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>0</y>
+       <width>401</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="histograma_despues_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_5">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>270</y>
+       <width>391</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="foto_antes_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>270</y>
+       <width>401</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="foto_despues_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_divicion">
     <attribute name="title">
      <string>Divicion</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton_tab_siguiente">
+    <widget class="QPushButton" name="boton_siguiente_tag3">
      <property name="geometry">
       <rect>
        <x>-10</x>
@@ -102,12 +192,27 @@
       <string>Siguiente</string>
      </property>
     </widget>
+    <widget class="QWidget" name="gridLayoutWidget_7">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>801</width>
+       <height>531</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="divicion_grid_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_resultados">
     <attribute name="title">
      <string>Resultados</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton_tab_resultados_siguiente">
+    <widget class="QPushButton" name="boton_siguiente_tag4">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -127,7 +232,7 @@
       <string>Siguiente</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_resultados_sagregar">
+    <widget class="QPushButton" name="boton_agregar_tag4">
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -146,6 +251,21 @@
      <property name="text">
       <string>Agregar</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_8">
+     <property name="geometry">
+      <rect>
+       <x>-1</x>
+       <y>-1</y>
+       <width>801</width>
+       <height>531</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="resultados_layout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+     </layout>
     </widget>
    </widget>
   </widget>
