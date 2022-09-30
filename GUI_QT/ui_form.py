@@ -119,10 +119,27 @@ class Ui_main_qwidget(object):
         self.resultados_layout.setSizeConstraint(QLayout.SetFixedSize)
         self.resultados_layout.setContentsMargins(0, 0, 0, 0)
         self.taps_.addTab(self.tab_resultados, "")
+        self.configurar_camera = QWidget()
+        self.configurar_camera.setObjectName(u"configurar_camera")
+        self.gridLayoutWidget_9 = QWidget(self.configurar_camera)
+        self.gridLayoutWidget_9.setObjectName(u"gridLayoutWidget_9")
+        self.gridLayoutWidget_9.setGeometry(QRect(0, 0, 381, 571))
+        self.config_camera_layout_tag5 = QGridLayout(self.gridLayoutWidget_9)
+        self.config_camera_layout_tag5.setObjectName(u"config_camera_layout_tag5")
+        self.config_camera_layout_tag5.setSizeConstraint(QLayout.SetFixedSize)
+        self.config_camera_layout_tag5.setContentsMargins(0, 0, 0, 0)
+        self.gridLayoutWidget_10 = QWidget(self.configurar_camera)
+        self.gridLayoutWidget_10.setObjectName(u"gridLayoutWidget_10")
+        self.gridLayoutWidget_10.setGeometry(QRect(400, 0, 401, 571))
+        self.config_camera_result_layout_tag5 = QGridLayout(self.gridLayoutWidget_10)
+        self.config_camera_result_layout_tag5.setObjectName(u"config_camera_result_layout_tag5")
+        self.config_camera_result_layout_tag5.setSizeConstraint(QLayout.SetFixedSize)
+        self.config_camera_result_layout_tag5.setContentsMargins(0, 0, 0, 0)
+        self.taps_.addTab(self.configurar_camera, "")
 
         self.retranslateUi(main_qwidget)
 
-        self.taps_.setCurrentIndex(1)
+        self.taps_.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(main_qwidget)
@@ -139,5 +156,6 @@ class Ui_main_qwidget(object):
         self.boton_siguiente_tag4.setText(QCoreApplication.translate("main_qwidget", u"Siguiente", None))
         self.boton_agregar_tag4.setText(QCoreApplication.translate("main_qwidget", u"Agregar", None))
         self.taps_.setTabText(self.taps_.indexOf(self.tab_resultados), QCoreApplication.translate("main_qwidget", u"Resultados", None))
+        self.taps_.setTabText(self.taps_.indexOf(self.configurar_camera), QCoreApplication.translate("main_qwidget", u"Configurar Camara", None))
     # retranslateUi
 

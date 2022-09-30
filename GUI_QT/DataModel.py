@@ -3,6 +3,11 @@ import os
 from cv2 import imwrite, imread
 import glob
 
+class foto_transform():
+    def __init__(self):
+        pass
+    def __iter__(self):
+        pass
 
 class DatosControl:
     def __init__(self, path):
@@ -28,8 +33,13 @@ class DatosControl:
         pass
     def save_registed_camera_instricic(self, ):
         pass
+
     #guarda foto con path nombre, altura y carpeta en especifico
     @save_
-    def save_fotos(self, foto, altura, name, carpeta, path = False):
-        return os.path.join(self.path_directory, self.carpeta, name + "_" + str(altura) + ".png"), foto
-                
+    def save_fotos_name(self, foto, altura, name, carpeta, path = False):
+        if isinstance(path, bool()):
+            return os.path.join(self.path_directory, self.carpeta, name + "_" + str(altura) + ".png"), foto
+        else:
+            return os.path.join(path, self.carpeta, name + "_" + str(altura) + ".png"), foto
+
+            
