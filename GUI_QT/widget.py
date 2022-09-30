@@ -43,22 +43,27 @@ class Widget(QWidget):
         self.ui.histograma_antes_layout.addWidget(self.label_image[2],
                                     1,
                                     1)  
-        self.ui.histograma_despues_layout.addWidget(self.label_image[2],
+        self.ui.histograma_despues_layout.addWidget(self.label_image[3],
                                     1,
                                     1) 
-        self.ui.foto_antes_layout.addWidget(self.label_image[2],
+        self.ui.foto_antes_layout.addWidget(self.label_image[4],
                                     1,
                                     1) 
-        self.ui.foto_despues_layout.addWidget(self.label_image[2],
+        self.ui.foto_despues_layout.addWidget(self.label_image[5],
                                     1,
                                     1) 
-        self.ui.divicion_grid_layout.addWidget(self.label_image[2],
+        self.ui.divicion_grid_layout.addWidget(self.label_image[6],
                                     1,
                                     1) 
-        self.ui.resultados_layout.addWidget(self.label_image[2],
+        self.ui.resultados_layout.addWidget(self.label_image[7],
                                     1,
                                     1) 
-
+        self.ui.config_camera_layout_tag5.addWidget(self.label_image[8],
+                                    1,
+                                    1) 
+        self.ui.config_camera_result_layout_tag5.addWidget(self.label_image[9],
+                                    1,
+                                    1)
     def Show_frames(self, frame, index_layout):      
         try:
             bytesPerLine = frame.shape[1] * frame.shape[2]
@@ -88,7 +93,8 @@ class Widget(QWidget):
 
     def boton_event_agregar_tag4(self):
         self.boton_agregar_tag4 = not(self.boton_agregar_tag4)
-    
+    def boton_capturar_tag5(self):
+        self.boton_capturar_tag5 = not(self.boton_capturar_tag5)    
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = Widget(8)

@@ -26,7 +26,7 @@
     <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tabs_calibracion">
     <attribute name="title">
@@ -278,7 +278,7 @@
        <x>0</x>
        <y>0</y>
        <width>381</width>
-       <height>571</height>
+       <height>521</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="config_camera_layout_tag5">
@@ -293,7 +293,7 @@
        <x>400</x>
        <y>0</y>
        <width>401</width>
-       <height>571</height>
+       <height>521</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="config_camera_result_layout_tag5">
@@ -301,6 +301,26 @@
        <enum>QLayout::SetFixedSize</enum>
       </property>
      </layout>
+    </widget>
+    <widget class="QPushButton" name="boton_siguiente_tag3_2">
+     <property name="geometry">
+      <rect>
+       <x>-10</x>
+       <y>530</y>
+       <width>811</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Capturar</string>
+     </property>
     </widget>
    </widget>
   </widget>
