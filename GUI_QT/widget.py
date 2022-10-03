@@ -17,12 +17,6 @@ class Widget(QWidget):
         super().__init__(parent)
         self.ui = Ui_main_qwidget()
         self.ui.setupUi(self)
-        #botones
-        self.boton_siguiente_tag1 = False
-        self.boton_siguiente_tag2 = False
-        self.boton_siguiente_tag3 = False
-        self.boton_siguiente_tag4 = False
-        self.boton_agregar_tag4 = False
         # eventos
         self.ui.boton_siguiente_tag1.clicked.connect(self.boton_event_siguinte_tag1)
         self.ui.boton_siguiente_tag2.clicked.connect(self.boton_event_siguinte_tag2)
@@ -79,22 +73,26 @@ class Widget(QWidget):
             imagen_scalada = imagen.scaled(469, 469, Qt.KeepAspectRatio)
             self.label_image[index_layout].setPixmap(imagen_scalada)
 
+
     def boton_event_siguinte_tag1(self):
-        self.boton_siguiente_tag1 = not(self.boton_siguiente_tag1)
+        pass
 
     def boton_event_siguinte_tag2(self):
-        self.boton_siguiente_tag2 = not(self.boton_siguiente_tag2)
+        pass
 
     def boton_event_siguinte_tag3(self):
-        self.boton_siguiente_tag3 = not(self.boton_siguiente_tag3)
+        pass
 
     def boton_event_siguinte_tag4(self):
-        self.boton_siguiente_tag4 = not(self.boton_siguiente_tag4)
+        pass
 
     def boton_event_agregar_tag4(self):
-        self.boton_agregar_tag4 = not(self.boton_agregar_tag4)
+        pass
+
     def boton_capturar_tag5(self):
-        self.boton_capturar_tag5 = not(self.boton_capturar_tag5)    
+        pass
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = Widget(8)

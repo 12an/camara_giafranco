@@ -2,7 +2,6 @@
 
 import cv2
 import numpy as np
-import glob
 
 
 class Camera:
@@ -36,39 +35,34 @@ class CameraIntrisicsValue(Camera):
         self.prev_img_shape = None
 
 
-    def extracting_corners(self, show):
-        for fname in self.images:
-            img = cv2.imread(fname)
-            gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-            # Find the chess board corners
-            # If desired number of corners are found in the image then ret = true
-            ret, corners = cv2.findChessboardCorners(gray,
-                                                     self.CHECKERBOARD,
-                                                     cv2.CALIB_CB_ADAPTIVE_THRESH + 
-                                                     cv2.CALIB_CB_FAST_CHECK + 
-                                                     cv2.CALIB_CB_NORMALIZE_IMAGE)
-            """
-            If desired number of corner are detected,
-            we refine the pixel coordinates and display 
-            them on the images of checker board
-            """
-            if ret == True:
-                self.objpoints.append(self.objp)
-                # refining pixel coordinates for given 2d points.
-                corners2 = cv2.cornerSubPix(gray,
-                                            corners, 
-                                            (11,11),
-                                            (-1,-1), 
-                                            self.criteria)
-                self.imgpoints.append(corners2)
-                # Draw and display the corners
-                img = cv2.drawChessboardCorners(img, 
-                                                self.CHECKERBOARD, 
-                                                corners2, 
-                                                ret)
-            if show:
-                cv2.imshow('img',img)
-                cv2.waitKey(0)
+    def extracting_corners(self, foto):
+        gray = cv2.cvtColor(foto, cv2.COLOR_BGR2GRAY)
+        # Find the chess board corners
+        # If desired number of corners are found in the image then ret = true
+        ret, corners = cv2.findChessboardCorners(gray,
+                                                 self.CHECKERBOARD,
+                                                 cv2.CALIB_CB_ADAPTIVE_THRESH + 
+                                                 cv2.CALIB_CB_FAST_CHECK + 
+                                                 cv2.CALIB_CB_NORMALIZE_IMAGE)
+        """
+        If desired number of corner are detected,
+        we refine the pixel coordinates and display 
+        them on the images of checker board
+        """
+        if ret == True:
+            self.objpoints.append(self.objp)
+            # refining pixel coordinates for given 2d points.
+            corners2 = cv2.cornerSubPix(gray,
+                                        corners, 
+                                        (11,11),
+                                        (-1,-1), 
+                                        self.criteria)
+            self.imgpoints.append(corners2)
+            # Draw and display the corners
+            return cv2.drawChessboardCorners(foto, 
+                                            self.CHECKERBOARD, 
+                                            corners2, 
+                                            ret)
 
     def get_intrisic_parameters(self):
         """

@@ -4,28 +4,47 @@ from cv2 import imwrite, imread
 import glob
 import TransformFotos
 
+class DataAnalisis:
+    def __init__(self):
+        self.area_total = 0
+        self.area_color = list()
 
-class foto_transform_data(TransformFotos):
+class FotoTransformData(TransformFotos):
     def __init__(self, foto, id_foto, coordenadas, altura):
         self.coordenadas = coordenadas
         self.id_foto = id_foto
         self.foto = foto
         self.area_color = dict()
+        self.Update_data()
 
     def __iter__(self):
         if self.index<4:
             if self.index==0:
-                yield self.foto, self.calibracion()
+                yield self.foto, self.foto_calibrada
             if self.index==1:
-                yield self.histogram()
+                yield (self.foto_calibrada,
+                       self.foto_normalizada,
+                       self.foto_original_histograma,
+                       self.foto_normalizada_histograma
+                       )
             if self.index==2:
-                yield self.divicion()
+                yield self.foto_dividida
             if self.index==3:
-                yield self.mask_final_resultado()
+                yield self.foto_final_resultado
+            self.index += 1
     def reset_index(self):
+        self.Update_data()
         self.index = 0
-
-class foto_chesspattern_data():
+    def Update_data(self):
+        self.foto_calibrada = self.calibracion()
+        self.foto_original_histograma = self.histogram()
+        self.foto_normalizada_histograma = self.histogram()
+        self.foto_normalizada = self.histogram()
+        self.foto_dividida = self.histogram()
+        self.foto_final_resultado = self.histogram()
+        
+        
+class FotoChesspatternData():
     shape = [0, 0, 0]
     total_fotos = 0
     def __init__(self, id_foto):
@@ -69,7 +88,7 @@ class DatosControl():
                     coordenada_mix = name[name.find("-") + 1: name.find(".")]
                     coordenada_imagen = {"x":coordenada_mix[coordenada_mix.find("x") + 1 :coordenada_mix.find("y")],
                                          "y":coordenada_mix[coordenada_mix.find("x") + 1 :coordenada_mix.find("y")]}
-                    self.imagenes_analisis.append(foto_transform_data(imagen,
+                    self.imagenes_analisis.append(FotoTransformData(imagen,
                                                                       id_imagen,
                                                                       coordenada_imagen,
                                                                       altura_imagen
@@ -77,7 +96,7 @@ class DatosControl():
                                                   )
                 if(tipo_imagen==2):
                     self.imagenes_chesspattern.append(
-                        foto_chesspattern_data(id_imagen).save(imagen) 
+                        FotoChesspatternData(id_imagen).save(imagen) 
                                                     )
 
     @open_
@@ -93,7 +112,11 @@ class DatosControl():
             return os.path.join(self.path_directory, self.carpeta_fotos_chesspattern), 2
         else:
             return path, 2
-
+    def live_chesspattern_foto(self, foto, id_foto):
+        self.imagenes_chesspattern.append(
+                        FotoChesspatternData(id_foto).save(foto) 
+                        )
+     
     def get_registed_camera_instricic(self, path = False):
         pass
     def save_registed_camera_instricic(self, ):
