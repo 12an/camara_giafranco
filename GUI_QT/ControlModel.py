@@ -17,7 +17,8 @@ class ControlModel(DatosControl, Widget):
         self.index_tag3 = 0
         self.index_tag4 = 0
         self.index_tag5 = 0
-        self.current_dir = os.getcwd()
+
+        self.current_dir = os.path.abspath(os.path.dirname( __file__ ))
         self.sensor_size = [3.55,5.88]
         self.resolucion = [1920, 1080]
         # cargando app
@@ -43,11 +44,12 @@ class ControlModel(DatosControl, Widget):
         #datos
         DatosControl.__init__(self,*[],
                                       **{"path" : self.current_dir,
-                                         "carpeta_fotos_analisis" : "/fotos_analisis",
-                                         "carpeta_fotos_chesspattern" : "/fotos_chess_pattern"
+                                         "carpeta_fotos_analisis" : "fotos_analisis",
+                                         "carpeta_fotos_chesspattern" : "fotos_chess_pattern",
+                                         "carpeta_gui" : "GUI_QT"
                                          }
                              )
-        # configurando resolucion
+        # configurando inicio
         self.camera.set_resolution(False)
         self.open_foto_analisis(False)
         # actualizar fotos camera
@@ -60,13 +62,13 @@ class ControlModel(DatosControl, Widget):
         self.Show_frames(self.frame, 8)
 
     def boton_event_siguinte_tag1(self):
-        foto, foto_calibracion = self.imagenes_analisis[self.index_tag1].next()
+        foto, foto_calibracion = next(self.imagenes_analisis[self.index_tag1])
         self.Show_frames(foto, 0)
         self.Show_frames(foto_calibracion, 1)
         self.index_tag1 += 1
 
     def boton_event_siguinte_tag2(self):
-        foto, foto_norm, foto_histo, foto_norm_histo  = self.imagenes_analisis[self.index_tag2].next()
+        foto, foto_norm, foto_histo, foto_norm_histo  = next(self.imagenes_analisis[self.index_tag2])
         self.Show_frames(foto, 2)
         self.Show_frames(foto_norm, 3)
         self.Show_frames(foto_histo, 4)
@@ -74,12 +76,12 @@ class ControlModel(DatosControl, Widget):
         self.index_tag2 += 1
 
     def boton_event_siguinte_tag3(self):
-        foto = self.imagenes_analisis[self.index_tag3].next()
+        foto = next(self.imagenes_analisis[self.index_tag3])
         self.Show_frames(foto, 6)
         self.index_tag3 += 1
 
     def boton_event_siguinte_tag4(self):
-        foto = self.imagenes_analisis[self.index_tag4].next()
+        foto = next(self.imagenes_analisis[self.index_tag4])
         self.Show_frames(foto, 7)
         self.index_tag4 += 1
 

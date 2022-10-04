@@ -33,6 +33,7 @@ class CameraIntrisicsValue(Camera):
         self.objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 
                                      0:CHECKERBOARD[1]].T.reshape(-1, 2)
         self.prev_img_shape = None
+        self.intrisics = list()
 
 
     def extracting_corners(self, foto):
@@ -71,8 +72,8 @@ class CameraIntrisicsValue(Camera):
         and corresponding pixel coordinates of the 
         detected corners (imgpoints)
         """
-        *self.intrisics = cv2.calibrateCamera(self.objpoints, 
-                                              self.imgpoints, 
+        self.intrisics = cv2.calibrateCamera(self.objpoints,
+                                              self.imgpoints,
                                               self.shape,
                                               None,
                                               None)
@@ -80,6 +81,9 @@ class CameraResolution(Camera):
     def __init__(self, resolucion, *arg, **args):
         Camera.__init__(self, *arg, **args)
         self.resolucion_frames = resolucion
+        #resolucion defecto
+        self.width = 1080
+        self.height = 720
     def get_resolution(self):
         try:
             self.width = int(self.captura.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -90,12 +94,11 @@ class CameraResolution(Camera):
             print("Error con la camera " + str(error))
 
     def set_resolution(self, default):
-        for frame_cameras in self.captura:
-            if default:
-                self.width, self.height = self.resolucion_frames
-                self.set_()
-            else:
-                self.set_()
+        if default:
+            self.width, self.height = self.resolucion_frames
+            self.set_()
+        else:
+            self.set_()
 
     def set_(self):
         self.captura.set(cv2.CAP_PROP_FRAME_WIDTH, 
@@ -112,5 +115,5 @@ class FrameCamera(CameraResolution):
         CameraResolution.__init__(self, *arg, **args)
 
     def frame(self):
-            ret, frame1 = self.captura.read(self.camera_ID)
+            ret, frame1 = self.captura.read(self.camera_id)
             return cv2.cvtColor(frame1, cv2.COLOR_RGB2BGR)
