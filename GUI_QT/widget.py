@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
-
+import matplotlib
+matplotlib.use('Qt5Agg')
 from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtWidgets import QLabel
 from PySide6.QtCore import Qt
@@ -11,6 +12,16 @@ from PySide6 import QtGui
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_main_qwidget
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
+
+
+class MplCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
 
 class Widget(QWidget):
     def __init__(self, cantidad_imagenes, parent=None):
@@ -27,19 +38,17 @@ class Widget(QWidget):
         self.label_image = list()
         for index in range(0, cantidad_imagenes):
             self.label_image.append(QLabel())
-            
+        
+        self.plot_layout = list()
+        self.plot_layout.append(self.ui.histograma_antes_layout)
+        self.plot_layout.append(self.ui.histograma_despues_layout)
         self.ui.antes_calibracion_layout.addWidget(self.label_image[0],
                                   1,
                                   1)
         self.ui.despues_calibracion_layout.addWidget(self.label_image[1],
                                     1,
                                     1)
-        self.ui.histograma_antes_layout.addWidget(self.label_image[2],
-                                    1,
-                                    1)  
-        self.ui.histograma_despues_layout.addWidget(self.label_image[3],
-                                    1,
-                                    1) 
+
         self.ui.foto_antes_layout.addWidget(self.label_image[4],
                                     1,
                                     1) 
@@ -73,6 +82,10 @@ class Widget(QWidget):
             imagen_scalada = imagen.scaled(469, 469, Qt.KeepAspectRatio)
             self.label_image[index_layout].setPixmap(imagen_scalada)
 
+    def show_plot(self, canvas_plot, index_layout):
+        self.plot_layout[index_layout].addWidget(canvas_plot,
+                                                 1,
+                                                 1) 
 
     def boton_event_siguinte_tag1(self):
         pass

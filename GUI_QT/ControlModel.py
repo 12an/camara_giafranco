@@ -58,22 +58,26 @@ class ControlModel(DatosControl, Widget):
         self.timer_actualizar_fotos.start(90)  
 
     def update_imagen_camera(self):
+
         self.frame = self.camera.frame()
         self.Show_frames(self.frame, 8)
 
     def boton_event_siguinte_tag1(self):
-        foto, foto_calibracion = next(self.imagenes_analisis[self.index_tag1])
-        self.Show_frames(foto, 0)
-        self.Show_frames(foto_calibracion, 1)
-        self.index_tag1 += 1
+        if(self.index_tag1<self.total_fotos_analisis):
+            foto, foto_calibracion = next(self.imagenes_analisis[self.index_tag1])
+            self.Show_frames(foto, 0)
+            self.Show_frames(foto_calibracion, 1)
+            self.index_tag1 += 1
+
 
     def boton_event_siguinte_tag2(self):
-        foto, foto_norm, foto_histo, foto_norm_histo  = next(self.imagenes_analisis[self.index_tag2])
-        self.Show_frames(foto, 2)
-        self.Show_frames(foto_norm, 3)
-        self.Show_frames(foto_histo, 4)
-        self.Show_frames(foto_histo, 5)
-        self.index_tag2 += 1
+        if(self.index_tag2<self.total_fotos_analisis):
+            foto, foto_norm, foto_histo, foto_histo_norm  = next(self.imagenes_analisis[self.index_tag2])
+            self.Show_frames(foto, 4)
+            self.Show_frames(foto_norm, 5)
+            self.show_plot(foto_histo, 0)
+            self.show_plot(foto_histo_norm, 1)
+            self.index_tag2 += 1
 
     def boton_event_siguinte_tag3(self):
         foto = next(self.imagenes_analisis[self.index_tag3])

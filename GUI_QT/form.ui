@@ -26,7 +26,7 @@
     <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabs_calibracion">
     <attribute name="title">
@@ -118,7 +118,7 @@
      </property>
      <layout class="QGridLayout" name="histograma_antes_layout">
       <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
+       <enum>QLayout::SetNoConstraint</enum>
       </property>
      </layout>
     </widget>
@@ -133,7 +133,7 @@
      </property>
      <layout class="QGridLayout" name="histograma_despues_layout">
       <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
+       <enum>QLayout::SetNoConstraint</enum>
       </property>
      </layout>
     </widget>
@@ -148,7 +148,7 @@
      </property>
      <layout class="QGridLayout" name="foto_antes_layout">
       <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
+       <enum>QLayout::SetNoConstraint</enum>
       </property>
      </layout>
     </widget>
@@ -163,7 +163,7 @@
      </property>
      <layout class="QGridLayout" name="foto_despues_layout">
       <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
+       <enum>QLayout::SetNoConstraint</enum>
       </property>
      </layout>
     </widget>

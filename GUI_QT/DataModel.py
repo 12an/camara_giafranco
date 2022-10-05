@@ -2,51 +2,54 @@
 import os
 from cv2 import imwrite, imread
 import glob
-from  TransformFotos import TransformFotos
+from  TransformFotos import LuminosidadFotos
+from widget import MplCanvas
 
 class DataAnalisis:
     def __init__(self):
         self.area_total = 0
         self.area_color = list()
-
-class FotoTransformData(TransformFotos):
+class Foto:
     def __init__(self, foto, id_foto, coordenadas, altura):
-
         self.coordenadas = coordenadas
         self.id_foto = id_foto
-        self.foto = foto
         self.area_color = dict()
-        self.Update_data()
-        self.index = 0
+        self.foto = foto
 
+class FotoTransformData(Foto, LuminosidadFotos):
+
+    def __init__(self, *arg,**args):
+        Foto.__init__(self, *arg,**args)
+        LuminosidadFotos.__init__(self, self.foto)
+        self.index = 0
+        self.histograma_plot = MplCanvas(self, width=5, height=4, dpi=100)
+        self.histograma_normalizado_plot = MplCanvas(self, width=5, height=4, dpi=100)
+        self.histograma_plot.axes.plot(self.histo_y)
+        self.histograma_normalizado_plot.axes.plot(self.histo_y_ac)
     def __iter__(self):
         return self
 
     def __next__(self):
         if self.index<4:
             if self.index==0:
+                self.index += 1
                 return self.foto, self.foto
             if self.index==1:
-                return (self.foto_calibrada,
-                       self.foto_normalizada,
-                       self.foto_original_histograma,
-                       self.foto_normalizada_histograma
-                       )
+                self.index += 1
+                return (self.foto,
+                        self.foto_normalizada,
+                        self.histograma_plot,
+                        self.histograma_normalizado_plot)
             if self.index==2:
-                return self.foto_dividida
+                self.index += 1
+                return self.foto,
             if self.index==3:
-                return self.foto_final_resultado
-            self.index += 1
+                self.index += 1
+                return self.foto,
+        
     def reset_index(self):
-        self.Update_data()
         self.index = 0
-    def Update_data(self):
-        self.foto_calibrada = self.calibracion()
-        self.foto_original_histograma = self.histogram()
-        self.foto_normalizada_histograma = self.histogram()
-        self.foto_normalizada = self.histogram()
-        self.foto_dividida = self.histogram()
-        self.foto_final_resultado = self.histogram()
+
         
         
 class FotoChesspatternData():
@@ -69,6 +72,7 @@ class FotoChesspatternData():
         self.foto = foto
 
 class DatosControl():
+
     def __init__(self, path,
                  carpeta_fotos_analisis,
                  carpeta_fotos_chesspattern,
@@ -80,7 +84,7 @@ class DatosControl():
         self.carpeta_fotos_analisis = carpeta_fotos_analisis
         self.carpeta_fotos_chesspattern = carpeta_fotos_chesspattern
         self.carpeta_gui = carpeta_gui
-
+        self.total_fotos_analisis = 0
     def save_(func):
         def inner(self, *arg,**args):
             imwrite(func(self, *arg,**args))
@@ -106,6 +110,7 @@ class DatosControl():
                                                                       altura_imagen
                                                                       )
                                                   )
+                    self.total_fotos_analisis += 1
                 if(tipo_imagen==2):
                     self.imagenes_chesspattern.append(
                         FotoChesspatternData(id_imagen).save(imagen) 
