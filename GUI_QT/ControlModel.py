@@ -80,14 +80,16 @@ class ControlModel(DatosControl, Widget):
             self.index_tag2 += 1
 
     def boton_event_siguinte_tag3(self):
-        foto = next(self.imagenes_analisis[self.index_tag3])
-        self.Show_frames(foto, 6)
-        self.index_tag3 += 1
+        if(self.index_tag3<self.total_fotos_analisis):
+            foto = next(self.imagenes_analisis[self.index_tag3])
+            self.Show_frames(foto, 6)
+            self.index_tag3 += 1
 
     def boton_event_siguinte_tag4(self):
-        foto = next(self.imagenes_analisis[self.index_tag4])
-        self.Show_frames(foto, 7)
-        self.index_tag4 += 1
+        if(self.index_tag4<self.total_fotos_analisis):
+            foto = next(self.imagenes_analisis[self.index_tag4])
+            self.Show_frames(foto, 7)
+            self.index_tag4 += 1
 
     def boton_event_agregar_tag4(self):
         pass

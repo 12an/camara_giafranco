@@ -1,8 +1,8 @@
 # This Python file uses the following encoding: utf-8
 import os
-from cv2 import imwrite, imread
+from cv2 import imwrite, imread, cvtColor, COLOR_RGB2BGR
 import glob
-from  TransformFotos import LuminosidadFotos
+from  TransformFotos import LuminosidadFotos, FiltroFotos
 from widget import MplCanvas
 
 class DataAnalisis:
@@ -16,16 +16,18 @@ class Foto:
         self.area_color = dict()
         self.foto = foto
 
-class FotoTransformData(Foto, LuminosidadFotos):
+class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
 
     def __init__(self, *arg,**args):
         Foto.__init__(self, *arg,**args)
         LuminosidadFotos.__init__(self, self.foto)
         self.index = 0
+        FiltroFotos.__init__(self, self.foto_normalizada)
         self.histograma_plot = MplCanvas(self, width=5, height=4, dpi=100)
-        self.histograma_normalizado_plot = MplCanvas(self, width=5, height=4, dpi=100)
-        self.histograma_plot.axes.plot(self.histo_y)
-        self.histograma_normalizado_plot.axes.plot(self.histo_y_ac)
+        self.histograma_norma_bilat_plot = MplCanvas(self, width=5, height=4, dpi=100)
+        self.histograma_plot.axes.plot(self.histo_bruto)
+        self.histograma_norma_bilat_plot.axes.plot(self.histo_norma_bilater)
+        
     def __iter__(self):
         return self
 
@@ -39,7 +41,7 @@ class FotoTransformData(Foto, LuminosidadFotos):
                 return (self.foto,
                         self.foto_normalizada,
                         self.histograma_plot,
-                        self.histograma_normalizado_plot)
+                        self.histograma_norma_bilat_plot)
             if self.index==2:
                 self.index += 1
                 return self.foto,
@@ -97,7 +99,7 @@ class DatosControl():
             path, tipo_imagen = func(self, *arg,**args)
             for path_name_foto in glob.iglob(path + "\*.jpg"):
                 name_foto = path_name_foto[len(path) + 1 : ]
-                imagen = imread(path_name_foto)
+                imagen = cvtColor(imread(path_name_foto), COLOR_RGB2BGR)
                 id_imagen = name_foto[0:name_foto.find("_")]
                 if(tipo_imagen==1):
                     altura_imagen = int(name_foto[name_foto.find("_") + 1: name_foto.find("-")])
