@@ -26,7 +26,7 @@
     <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="tabs_calibracion">
     <attribute name="title">
@@ -302,12 +302,12 @@
       </property>
      </layout>
     </widget>
-    <widget class="QPushButton" name="boton_siguiente_tag3_2">
+    <widget class="QPushButton" name="boton_calcular_tag5">
      <property name="geometry">
       <rect>
-       <x>-10</x>
+       <x>390</x>
        <y>530</y>
-       <width>811</width>
+       <width>411</width>
        <height>41</height>
       </rect>
      </property>
@@ -319,7 +319,27 @@
       </font>
      </property>
      <property name="text">
-      <string>Capturar</string>
+      <string>Calcular</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="boton_siguiente_tag5">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>530</y>
+       <width>391</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Siguiente</string>
      </property>
     </widget>
    </widget>

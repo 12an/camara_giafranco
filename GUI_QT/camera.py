@@ -50,6 +50,7 @@ class CameraIntrisicsValue(Camera):
         we refine the pixel coordinates and display 
         them on the images of checker board
         """
+        print(ret)
         if ret == True:
             self.objpoints.append(self.objp)
             # refining pixel coordinates for given 2d points.

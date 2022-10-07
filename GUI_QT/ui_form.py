@@ -135,15 +135,19 @@ class Ui_main_qwidget(object):
         self.config_camera_result_layout_tag5.setObjectName(u"config_camera_result_layout_tag5")
         self.config_camera_result_layout_tag5.setSizeConstraint(QLayout.SetFixedSize)
         self.config_camera_result_layout_tag5.setContentsMargins(0, 0, 0, 0)
-        self.boton_siguiente_tag3_2 = QPushButton(self.configurar_camera)
-        self.boton_siguiente_tag3_2.setObjectName(u"boton_siguiente_tag3_2")
-        self.boton_siguiente_tag3_2.setGeometry(QRect(-10, 530, 811, 41))
-        self.boton_siguiente_tag3_2.setFont(font)
+        self.boton_calcular_tag5 = QPushButton(self.configurar_camera)
+        self.boton_calcular_tag5.setObjectName(u"boton_calcular_tag5")
+        self.boton_calcular_tag5.setGeometry(QRect(390, 530, 411, 41))
+        self.boton_calcular_tag5.setFont(font)
+        self.boton_siguiente_tag5 = QPushButton(self.configurar_camera)
+        self.boton_siguiente_tag5.setObjectName(u"boton_siguiente_tag5")
+        self.boton_siguiente_tag5.setGeometry(QRect(0, 530, 391, 41))
+        self.boton_siguiente_tag5.setFont(font)
         self.taps_.addTab(self.configurar_camera, "")
 
         self.retranslateUi(main_qwidget)
 
-        self.taps_.setCurrentIndex(1)
+        self.taps_.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(main_qwidget)
@@ -160,7 +164,8 @@ class Ui_main_qwidget(object):
         self.boton_siguiente_tag4.setText(QCoreApplication.translate("main_qwidget", u"Siguiente", None))
         self.boton_agregar_tag4.setText(QCoreApplication.translate("main_qwidget", u"Agregar", None))
         self.taps_.setTabText(self.taps_.indexOf(self.tab_resultados), QCoreApplication.translate("main_qwidget", u"Resultados", None))
-        self.boton_siguiente_tag3_2.setText(QCoreApplication.translate("main_qwidget", u"Capturar", None))
+        self.boton_calcular_tag5.setText(QCoreApplication.translate("main_qwidget", u"Calcular", None))
+        self.boton_siguiente_tag5.setText(QCoreApplication.translate("main_qwidget", u"Siguiente", None))
         self.taps_.setTabText(self.taps_.indexOf(self.configurar_camera), QCoreApplication.translate("main_qwidget", u"Configurar Camara", None))
     # retranslateUi
 

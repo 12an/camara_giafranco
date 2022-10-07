@@ -34,6 +34,8 @@ class Widget(QWidget):
         self.ui.boton_siguiente_tag3.clicked.connect(self.boton_event_siguinte_tag3)
         self.ui.boton_siguiente_tag4.clicked.connect(self.boton_event_siguinte_tag4)
         self.ui.boton_agregar_tag4.clicked.connect(self.boton_event_agregar_tag4)
+        self.ui.boton_siguiente_tag5.clicked.connect(self.boton_event_siguiente_tag5)
+        self.ui.boton_calcular_tag5.clicked.connect(self.boton_event_calcular_tag5)
         # imagenes para los layout
         self.label_image = list()
         for index in range(0, cantidad_imagenes):
@@ -85,7 +87,7 @@ class Widget(QWidget):
     def show_plot(self, canvas_plot, index_layout):
         self.plot_layout[index_layout].addWidget(canvas_plot,
                                                  1,
-                                                 1) 
+                                                 1)
 
     def boton_event_siguinte_tag1(self):
         pass
@@ -102,10 +104,11 @@ class Widget(QWidget):
     def boton_event_agregar_tag4(self):
         pass
 
-    def boton_capturar_tag5(self):
+    def boton_event_siguiente_tag5(self):
         pass
 
-
+    def boton_event_calcular_tag5(self):
+        pass
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = Widget(8)
