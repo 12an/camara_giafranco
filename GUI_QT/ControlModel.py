@@ -2,9 +2,8 @@
 import os
 import sys
 from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import QTimer
 from DataModel import DatosControl
-from widget import Widget, MplCanvas
+from widget import Widget
 from camera import CameraIntrisicsValue
 import cv2
 
@@ -24,11 +23,11 @@ class ControlModel(DatosControl, Widget):
         # cargando app
         Widget.__init__(self,
                         *[],
-                        **{"cantidad_imagenes":10})
+                        **{"cantidad_imagenes":11})
         self.parametros_calibracion = {"numero_cameras" : 1,
                                   "sensor_size" : self.sensor_size,
                                   "camera_id" : 0,
-                                  "CHECKERBOARD" : (7,10)
+                                  "CHECKERBOARD" : (6,9)
                                   }
         self.camera_instrisics_ = CameraIntrisicsValue(*[],
                                                        **self.parametros_calibracion
@@ -48,11 +47,32 @@ class ControlModel(DatosControl, Widget):
         self.open_foto_analisis(False)
         self.open_foto_chesspattern(False)
 
+
     def boton_event_siguinte_tag1(self):
         if(self.index_tag1<self.total_fotos_analisis):
-            foto, foto_calibracion = next(self.imagenes_analisis[self.index_tag1])
-            self.Show_frames(foto, 0)
-            self.Show_frames(foto_calibracion, 1)
+            foto_tratada = next(self.imagenes_analisis[self.index_tag1])
+            newcameramtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx,
+                                                              self.dist,
+                                                              (self.imagenes_analisis[self.index_tag1].width , self.imagenes_analisis[self.index_tag1].height ),
+                                                              1,
+                                                              (self.imagenes_analisis[self.index_tag1].width , self.imagenes_analisis[self.index_tag1].height ))
+            mapx, mapy = cv2.initUndistortRectifyMap(self.mtx, self.dist, None, newcameramtx, (self.imagenes_analisis[self.index_tag1].width , self.imagenes_analisis[self.index_tag1].height ), 5)
+            dst1 = cv2.remap(foto_tratada, mapx, mapy, cv2.INTER_LINEAR)
+            dst1 = cv2.cvtColor(dst1, cv2.COLOR_RGB2BGR)
+            # crop the image
+            x, y, w, h = roi
+            self.imagenes_analisis[self.index_tag1].foto_calibrada = dst1[y:y+h, x:x+w]
+            # dibujando cuadrado en la imagen calibrada del area de interes
+            for j in range(x, x + w):
+                for doble_linea in range(0, 2):
+                    dst1[y + doble_linea, j] = [239,184,16]
+                    dst1[y + h + doble_linea, j] = [239,184,16]
+            for i in range(y, y + h):
+                for doble_linea in range(0, 2):
+                    dst1[i, x + doble_linea] = [239,184,16]
+                    dst1[i, x + w + doble_linea] = [239,184,16]
+            self.Show_frames(foto_tratada, 0)
+            self.Show_frames(cv2.cvtColor(dst1, cv2.COLOR_RGB2BGR), 1)
             self.index_tag1 += 1
 
     def boton_event_siguinte_tag2(self):
@@ -80,21 +100,18 @@ class ControlModel(DatosControl, Widget):
         pass
 
     def boton_event_siguiente_tag5(self):
-        print("aaaa")
         if(self.index_tag5<self.total_fotos_chesspattern ):
-            print("aaafa")
             foto = self.imagenes_chesspattern[self.index_tag5].foto
-            #cv2.imshow("ddd",foto)
-            draw_foto = self.camera_instrisics_.extracting_corners(foto)
-            #cv2.imshow("dsa",draw_foto)
             self.Show_frames(foto, 8)
+            draw_foto = self.camera_instrisics_.extracting_corners(foto)
             self.Show_frames(draw_foto, 9)
             self.index_tag5 += 1
 
     def boton_event_calcular_tag5(self):
         if(self.index_tag5>0):
-            self.camera_instriscic = self.camera_instrisics_.get_intrisic_parameters()
-	
+            self.ret, self.mtx, self.dist, self.rvecs, self.tvecs = self.camera_instrisics_.get_intrisic_parameters()
+            self.save_instricic_camera()
+            
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ejecucion = ControlModel()

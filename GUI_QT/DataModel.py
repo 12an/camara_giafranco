@@ -16,6 +16,8 @@ class Foto:
         self.id_foto = id_foto
         self.area_color = dict()
         self.foto = foto
+        self.height  = foto.shape[0]
+        self.width  = foto.shape[1]
 
 class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
 
@@ -27,7 +29,8 @@ class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
         self.histograma_plot = MplCanvas(self, width=5, height=4, dpi=100)
         self.histograma_norma_bilat_plot = MplCanvas(self, width=5, height=4, dpi=100)
         self.histograma_plot.axes.plot(self.histo_bruto)
-        self.histograma_norma_bilat_plot.axes.plot(self.histo_norma_bilater)        
+        self.histograma_norma_bilat_plot.axes.plot(self.histo_norma_bilater) 
+        self.foto_calibrada = self.foto
     def __iter__(self):
         return self
 
@@ -35,7 +38,7 @@ class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
         if self.index<4:
             if self.index==0:
                 self.index += 1
-                return self.foto, self.foto
+                return self.foto_normalizada
             if self.index==1:
                 self.index += 1
                 return (self.foto,
@@ -82,6 +85,11 @@ class DatosControl():
         self.total_fotos_analisis = 0
         self.total_fotos_chesspattern = 0
         self.camera_instriscic = list()
+        self.ret = []
+        self.mtx = []
+        self.dist = []
+        self.rvecs = []
+        self.tvecs = []
         self.read_instricic_camera()
     def save_(func):
         def inner(self, *arg,**args):
@@ -110,7 +118,6 @@ class DatosControl():
                                                   )
                     self.total_fotos_analisis += 1
                 if(tipo_imagen==2):
-                    print("aa1daa")
                     self.imagenes_chesspattern.append(
                         FotoChesspatternData(id_imagen, imagen) 
                                                     )
@@ -119,7 +126,6 @@ class DatosControl():
 
     @open_
     def open_foto_analisis(self, path = False):
-        print(self.path_directory)
         if isinstance(path, bool):
             path = self.path_directory
             return path.replace(self.carpeta_gui, self.carpeta_fotos_analisis), 1
@@ -149,12 +155,12 @@ class DatosControl():
 
     def save_instricic_camera(self):
         with open(self.path_directory.replace(self.carpeta_gui, self.carpeta_data) + self.instriscic_pkl , "wb") as saving:
-            pickle.dump(self.camera_instriscic, saving)
+            pickle.dump([self.ret, self.mtx, self.dist, self.rvecs, self.tvecs], saving)
         
     def read_instricic_camera(self):
         with open(self.path_directory.replace(self.carpeta_gui, self.carpeta_data) + self.instriscic_pkl , "rb") as reading:
             try:
-                self.camera_instriscic = pickle.load(reading)
+                self.ret, self.mtx, self.dist, self.rvecs, self.tvecs = pickle.load(reading)
             except EOFError as nothing_in_file:
-                print("there is nothing in the file")
+                print("there is nothing in the file, of data:")
                 print(nothing_in_file)
