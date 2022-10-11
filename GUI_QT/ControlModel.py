@@ -50,29 +50,21 @@ class ControlModel(DatosControl, Widget):
 
     def boton_event_siguinte_tag1(self):
         if(self.index_tag1<self.total_fotos_analisis):
-            foto_tratada = next(self.imagenes_analisis[self.index_tag1])
-            newcameramtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx,
-                                                              self.dist,
-                                                              (self.imagenes_analisis[self.index_tag1].width , self.imagenes_analisis[self.index_tag1].height ),
-                                                              1,
-                                                              (self.imagenes_analisis[self.index_tag1].width , self.imagenes_analisis[self.index_tag1].height ))
-            mapx, mapy = cv2.initUndistortRectifyMap(self.mtx, self.dist, None, newcameramtx, (self.imagenes_analisis[self.index_tag1].width , self.imagenes_analisis[self.index_tag1].height ), 5)
-            dst1 = cv2.remap(foto_tratada, mapx, mapy, cv2.INTER_LINEAR)
-            dst1 = cv2.cvtColor(dst1, cv2.COLOR_RGB2BGR)
-            # crop the image
-            x, y, w, h = roi
-            self.imagenes_analisis[self.index_tag1].foto_calibrada = dst1[y:y+h, x:x+w]
+            foto_tratada, foto_calibrada = next(self.imagenes_analisis[self.index_tag1])
+            x, y, w, h = self.imagenes_analisis[self.index_tag1].roi
+            
+            
             # dibujando cuadrado en la imagen calibrada del area de interes
             for j in range(x, x + w):
                 for doble_linea in range(0, 2):
-                    dst1[y + doble_linea, j] = [239,184,16]
-                    dst1[y + h + doble_linea, j] = [239,184,16]
+                    foto_calibrada[y + doble_linea, j] = [239,184,16]
+                    foto_calibrada[y + h + doble_linea, j] = [239,184,16]
             for i in range(y, y + h):
                 for doble_linea in range(0, 2):
-                    dst1[i, x + doble_linea] = [239,184,16]
-                    dst1[i, x + w + doble_linea] = [239,184,16]
+                    foto_calibrada[i, x + doble_linea] = [239,184,16]
+                    foto_calibrada[i, x + w + doble_linea] = [239,184,16]
             self.Show_frames(foto_tratada, 0)
-            self.Show_frames(cv2.cvtColor(dst1, cv2.COLOR_RGB2BGR), 1)
+            self.Show_frames(cv2.cvtColor(foto_calibrada, cv2.COLOR_RGB2BGR), 1)
             self.index_tag1 += 1
 
     def boton_event_siguinte_tag2(self):

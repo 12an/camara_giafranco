@@ -3,7 +3,7 @@ import os
 import glob
 from cv2 import imwrite, imread, cvtColor, COLOR_RGB2BGR
 import pickle
-from  TransformFotos import LuminosidadFotos, FiltroFotos
+from  TransformFotos import LuminosidadFotos, FiltroFotos, CalibrateFoto
 from widget import MplCanvas
 
 class DataAnalisis:
@@ -11,15 +11,20 @@ class DataAnalisis:
         self.area_total = 0
         self.area_color = list()
 class Foto:
-    def __init__(self, foto, id_foto, coordenadas, altura):
+    def __init__(self, foto, id_foto, coordenadas, altura, origen_coordenada, rotacion):
         self.coordenadas = coordenadas
+        self.rotacion = rotacion
+        self.origen_coordenada = origen_coordenada
         self.id_foto = id_foto
         self.area_color = dict()
         self.foto = foto
         self.height  = foto.shape[0]
         self.width  = foto.shape[1]
 
-class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
+class FotoTransformData(Foto, 
+                        LuminosidadFotos, 
+                        FiltroFotos,
+                        CalibrateFoto):
 
     def __init__(self, *arg,**args):
         Foto.__init__(self, *arg,**args)
@@ -31,6 +36,7 @@ class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
         self.histograma_plot.axes.plot(self.histo_bruto)
         self.histograma_norma_bilat_plot.axes.plot(self.histo_norma_bilater) 
         self.foto_calibrada = self.foto
+        self.rio_foto_calibrada = list()
     def __iter__(self):
         return self
 
@@ -38,7 +44,8 @@ class FotoTransformData(Foto, LuminosidadFotos, FiltroFotos):
         if self.index<4:
             if self.index==0:
                 self.index += 1
-                return self.foto_normalizada
+                self.calibrate()
+                return self.foto_normalizada, self.foto_calibrada
             if self.index==1:
                 self.index += 1
                 return (self.foto,
