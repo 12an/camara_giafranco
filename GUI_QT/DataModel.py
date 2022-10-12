@@ -10,14 +10,32 @@ class DataAnalisis:
     def __init__(self):
         self.area_total = 0
         self.area_color = list()
+class CameraData:
+    def __init__(self,
+                 ret,
+                 mtx,
+                 dist,
+                 rvecs,
+                 tvecs):
+        self.ret = ret
+        self.mtx = mtx
+        self.dist = dist
+        self.rvecs = rvecs
+        self.tvecs = tvecs
 class Foto:
-    def __init__(self, foto, id_foto, coordenadas, altura, origen_coordenada, rotacion):
+    def __init__(self,
+                 foto,
+                 id_foto,
+                 coordenadas,
+                 altura,
+                 origen_coordenada,
+                 rotacion):
         self.coordenadas = coordenadas
         self.rotacion = rotacion
         self.origen_coordenada = origen_coordenada
         self.id_foto = id_foto
         self.area_color = dict()
-        self.foto = foto
+        self.foto_ = foto
         self.height  = foto.shape[0]
         self.width  = foto.shape[1]
 
@@ -28,15 +46,24 @@ class FotoTransformData(Foto,
 
     def __init__(self, *arg,**args):
         Foto.__init__(self, *arg,**args)
-        LuminosidadFotos.__init__(self, self.foto)
+        LuminosidadFotos.__init__(self, self.foto_)
+        
         self.index = 0
         FiltroFotos.__init__(self, self.foto_normalizada)
+        foto,
+                     mtx,
+                     dist,
+                     R,
+                     T,
+                     width,
+                     height,
+                     altura
+        CalibrateFoto.__init__(self, *[], **{"foto": foto_norm_bilate,
+                                             })
         self.histograma_plot = MplCanvas(self, width=5, height=4, dpi=100)
         self.histograma_norma_bilat_plot = MplCanvas(self, width=5, height=4, dpi=100)
         self.histograma_plot.axes.plot(self.histo_bruto)
         self.histograma_norma_bilat_plot.axes.plot(self.histo_norma_bilater) 
-        self.foto_calibrada = self.foto
-        self.rio_foto_calibrada = list()
     def __iter__(self):
         return self
 
@@ -49,7 +76,7 @@ class FotoTransformData(Foto,
             if self.index==1:
                 self.index += 1
                 return (self.foto,
-                        self.foto_normalizada,
+                        self.foto_norm_bilate,
                         self.histograma_plot,
                         self.histograma_norma_bilat_plot)
             if self.index==2:
@@ -117,7 +144,7 @@ class DatosControl():
                     coordenada_mix = name_foto[name_foto.find("-") + 1: name_foto.find(".")]
                     coordenada_imagen = {"x":coordenada_mix[coordenada_mix.find("x") + 1 :coordenada_mix.find("y")],
                                          "y":coordenada_mix[coordenada_mix.find("x") + 1 :coordenada_mix.find("y")]}
-                    self.imagenes_analisis.append(FotoTransformData(imagen,
+                    self.imagenes_analisis.append(FotoTransformData(*[], **{}imagen,
                                                                       id_imagen,
                                                                       coordenada_imagen,
                                                                       altura_imagen

@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 import cv2
 import numpy as np
+from sklearn.cluster import DBSCAN
+from DataModel import CameraData
 
 class LuminosidadFotos:
     def __init__(self, foto):
@@ -56,7 +58,7 @@ class FiltroFotos:
             for j in range(0, self.foto_normalizada.shape[1]):
                 self.histo_norma_bilater[self.foto_normalizada[i,j]] = self.histo_norma_bilater[self.foto_normalizada[i,j]] + 1
 
-class CalibrateFoto():
+class CalibrateFoto(CameraData):
     def __init__(self, foto,
                  mtx,
                  dist,
@@ -64,10 +66,13 @@ class CalibrateFoto():
                  T,
                  width,
                  height,
-                 altura):
+                 altura, 
+                 *arg,
+                 **args):
                  #origen_coordenada,
                  #posicion_coordenada,
                  #rotacion_dron):
+        CameraData.__init__(self, *arg, **args)
         self.mtx = mtx
         self.dist = dist
         self.R = R
@@ -82,6 +87,7 @@ class CalibrateFoto():
         #self.rotacion = rotacion_dron
         #self.foto_3d_from_2d = 
         #self.foto_word_coordinates = 
+        self.foto_3d_from_2d = np.zeros((self.height, self.width, 3), dtype=float)
     def calibrate(self):
         self.newcameramtx, self.roi = cv2.getOptimalNewCameraMatrix(self.mtx,
                                                           self.dist,
@@ -100,7 +106,25 @@ class CalibrateFoto():
         for i in range(0, self.width):
             for j in range(0, self.height):
                 vector_pixel_2d_posicion = np.matrix([[i], [j], [self.z]])
-                self.foto_3d_from_2d = self.newcameramtx.I * vector_pixel_2d_posicion
-        pass
+                foto_3d_from_2d = np.linalg.solv(self.newcameramtx, vector_pixel_2d_posicion)
+                self.foto_3d_from_2d[i][j][0] = foto_3d_from_2d[0]
+                self.foto_3d_from_2d[i][j][1] = foto_3d_from_2d[1]
+                self.foto_3d_from_2d[i][j][2] = foto_3d_from_2d[2]
+
     def get_word_coordinate_foto(self):
         pass
+
+class Segmentacion():
+    def __init__(self, foto,
+                distancia,
+                min_group_pixel_size):
+
+        #reshaping foto from 3 dimensions to 2 dimensions
+        self.foto_reshaped = foto.reshape((-1,3))
+        #converting to float
+        self.foto_reshaped = np.float32(self.foto_reshaped)
+        self.distancia = distancia
+        self.min_group_pixel_size = min_group_pixel_size
+        self.clustering = DBSCAN(eps = self.distancia, min_samples = self.min_group_pixel_size, n_jobs = -1)
+    def segmentacion(self):
+        self.clustering.fit(self.foto_reshaped)
