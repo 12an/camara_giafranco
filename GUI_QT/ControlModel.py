@@ -104,6 +104,7 @@ class ControlModel(DatosControl, Widget):
             self.ret, self.mtx, self.dist, self.rvecs, self.tvecs = self.camera_instrisics_.get_intrisic_parameters()
             self.save_instricic_camera()
             
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ejecucion = ControlModel()

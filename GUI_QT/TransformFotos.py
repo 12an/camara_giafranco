@@ -1,8 +1,8 @@
 # This Python file uses the following encoding: utf-8
 import cv2
 import numpy as np
-from sklearn.cluster import DBSCAN
-from DataModel import CameraData
+from sklearn.cluster import DBSCAN, OPTICS
+
 
 class LuminosidadFotos:
     def __init__(self, foto):
@@ -33,7 +33,7 @@ class LuminosidadFotos:
 
     def normalizacion_Luminosidad(self):
         numero_pixeles = self.img_yuv[:,:,0].size
-        histograma_normalizado = self.histo_y_ac / numero_pixeles * 220
+        histograma_normalizado = self.histo_y_ac / numero_pixeles * 200
         for i in range(0, self.foto.shape[0]):
             for j in range(0, self.foto.shape[1]):
                 self.img_yuv[:,:,0][i,j] = histograma_normalizado[self.img_yuv[:,:,0][i,j]]
@@ -50,7 +50,7 @@ class FiltroFotos:
         self.histograma_bilateral()
 
     def bilateral_filtro(self):
-        self.foto_norm_bilate = cv2.bilateralFilter(self.foto_normalizada,30,80,80)
+        self.foto_norm_bilate = cv2.bilateralFilter(self.foto_normalizada,95,80,80)
 
     def histograma_bilateral(self):
         self.histo_norma_bilater = np.zeros(256, int)
@@ -58,30 +58,24 @@ class FiltroFotos:
             for j in range(0, self.foto_normalizada.shape[1]):
                 self.histo_norma_bilater[self.foto_normalizada[i,j]] = self.histo_norma_bilater[self.foto_normalizada[i,j]] + 1
 
-class CalibrateFoto(CameraData):
+class CalibrateFoto():
     def __init__(self, foto,
                  mtx,
                  dist,
-                 R,
-                 T,
                  width,
                  height,
-                 altura, 
+                 altura_foto_tomada, 
                  *arg,
                  **args):
                  #origen_coordenada,
                  #posicion_coordenada,
                  #rotacion_dron):
-        CameraData.__init__(self, *arg, **args)
         self.mtx = mtx
         self.dist = dist
-        self.R = R
-        self.T = T
-        self.rio_foto = list()
         self.foto_tratada = foto
         self.width = width
         self.height = height
-        self.z = altura
+        self.altura_foto_tomada = altura_foto_tomada
         self.calibrate()
         #self.translation_vector = 
         #self.rotacion = rotacion_dron
@@ -105,7 +99,7 @@ class CalibrateFoto(CameraData):
         # z es constante a la altura de la imagen
         for i in range(0, self.width):
             for j in range(0, self.height):
-                vector_pixel_2d_posicion = np.matrix([[i], [j], [self.z]])
+                vector_pixel_2d_posicion = np.matrix([[i], [j], [self.altura_foto_tomada]])
                 foto_3d_from_2d = np.linalg.solv(self.newcameramtx, vector_pixel_2d_posicion)
                 self.foto_3d_from_2d[i][j][0] = foto_3d_from_2d[0]
                 self.foto_3d_from_2d[i][j][1] = foto_3d_from_2d[1]
@@ -115,16 +109,31 @@ class CalibrateFoto(CameraData):
         pass
 
 class Segmentacion():
-    def __init__(self, foto,
+    def __init__(self, foto_calibrada,
                 distancia,
-                min_group_pixel_size):
-
+                min_group_pixel_size,
+                *arg,
+                **args):
+        self.foto__ = cv2.cvtColor(foto_calibrada, cv2.COLOR_BGR2HSV)
+        self.foto_calibrada_recortada_segmentada = cv2.cvtColor(foto_calibrada, cv2.COLOR_BGR2HSV)[:,:,0]
         #reshaping foto from 3 dimensions to 2 dimensions
-        self.foto_reshaped = foto.reshape((-1,3))
+        self.foto_reshaped = self.foto_calibrada_recortada_segmentada.reshape((self.foto_calibrada_recortada_segmentada.shape[0] * self.foto_calibrada_recortada_segmentada.shape[1],1))
         #converting to float
         self.foto_reshaped = np.float32(self.foto_reshaped)
         self.distancia = distancia
         self.min_group_pixel_size = min_group_pixel_size
-        self.clustering = DBSCAN(eps = self.distancia, min_samples = self.min_group_pixel_size, n_jobs = -1)
+        self.colores_dictionario_labels = {}
+
     def segmentacion(self):
+        self.clustering = DBSCAN(eps = self.distancia, min_samples = self.min_group_pixel_size, p = 2)
         self.clustering.fit(self.foto_reshaped)
+        self.reshaped_result = self.clustering.labels_.reshape((self.foto_calibrada_recortada_segmentada.shape[0], self.foto_calibrada_recortada_segmentada.shape[1]))
+        #redrwing picture
+        for i in range(0, self.foto_calibrada_recortada_segmentada.shape[0]):
+            for j in range(0, self.foto_calibrada_recortada_segmentada.shape[1]):
+                if self.colores_dictionario_labels.get(self.reshaped_result[i, j]) is None:
+                    self.colores_dictionario_labels[self.reshaped_result[i, j]] = self.foto_calibrada_recortada_segmentada[i, j]
+                else:
+                    self.foto_calibrada_recortada_segmentada[i, j] = self.colores_dictionario_labels.get(self.reshaped_result[i, j])
+        self.foto__[:,:,0] = self.foto_calibrada_recortada_segmentada     
+        cv2.imshow("ajaj", cv2.cvtColor(self.foto__, cv2.COLOR_HSV2BGR))

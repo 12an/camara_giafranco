@@ -3,7 +3,7 @@ import os
 import glob
 from cv2 import imwrite, imread, cvtColor, COLOR_RGB2BGR
 import pickle
-from  TransformFotos import LuminosidadFotos, FiltroFotos, CalibrateFoto
+from  TransformFotos import LuminosidadFotos, FiltroFotos, CalibrateFoto, Segmentacion
 from widget import MplCanvas
 
 class DataAnalisis:
@@ -27,9 +27,12 @@ class Foto:
                  foto,
                  id_foto,
                  coordenadas,
-                 altura,
+                 altura_foto_tomada,
                  origen_coordenada,
-                 rotacion):
+                 rotacion, 
+                 *arg,
+                 **args):
+        self.altura_foto_tomada = altura_foto_tomada
         self.coordenadas = coordenadas
         self.rotacion = rotacion
         self.origen_coordenada = origen_coordenada
@@ -39,10 +42,11 @@ class Foto:
         self.height  = foto.shape[0]
         self.width  = foto.shape[1]
 
-class FotoTransformData(Foto, 
-                        LuminosidadFotos, 
+class FotoTransformData(Foto,
+                        LuminosidadFotos,
                         FiltroFotos,
-                        CalibrateFoto):
+                        CalibrateFoto,
+                        Segmentacion):
 
     def __init__(self, *arg,**args):
         Foto.__init__(self, *arg,**args)
@@ -50,16 +54,15 @@ class FotoTransformData(Foto,
         
         self.index = 0
         FiltroFotos.__init__(self, self.foto_normalizada)
-        foto,
-                     mtx,
-                     dist,
-                     R,
-                     T,
-                     width,
-                     height,
-                     altura
-        CalibrateFoto.__init__(self, *[], **{"foto": foto_norm_bilate,
-                                             })
+        args["foto"] = self.foto_norm_bilate
+        args["height"] = self.height
+        args["width"] = self.width
+        CalibrateFoto.__init__(self, *[], **args)
+        args["foto_calibrada"] = self.foto_calibrada_recortada
+        args["distancia"] = 50
+        args["min_group_pixel_size"] = 10
+        Segmentacion.__init__(self,*[], **args )
+        
         self.histograma_plot = MplCanvas(self, width=5, height=4, dpi=100)
         self.histograma_norma_bilat_plot = MplCanvas(self, width=5, height=4, dpi=100)
         self.histograma_plot.axes.plot(self.histo_bruto)
@@ -80,6 +83,7 @@ class FotoTransformData(Foto,
                         self.histograma_plot,
                         self.histograma_norma_bilat_plot)
             if self.index==2:
+                self.segmentacion()
                 self.index += 1
                 return self.foto,
             if self.index==3:
@@ -144,10 +148,17 @@ class DatosControl():
                     coordenada_mix = name_foto[name_foto.find("-") + 1: name_foto.find(".")]
                     coordenada_imagen = {"x":coordenada_mix[coordenada_mix.find("x") + 1 :coordenada_mix.find("y")],
                                          "y":coordenada_mix[coordenada_mix.find("x") + 1 :coordenada_mix.find("y")]}
-                    self.imagenes_analisis.append(FotoTransformData(*[], **{}imagen,
-                                                                      id_imagen,
-                                                                      coordenada_imagen,
-                                                                      altura_imagen
+                    self.imagenes_analisis.append(FotoTransformData(*[], **{"foto" : imagen,
+                                                                      "id_foto" : id_imagen,
+                                                                      "coordenadas" : coordenada_imagen,
+                                                                      "origen_coordenada" : 0,
+                                                                      "altura_foto_tomada" : altura_imagen,
+                                                                      "rotacion" : 0,
+                                                                      "ret" : self.ret,
+                                                                      "mtx" : self.mtx,
+                                                                      "dist" : self.dist,
+                                                                      "rvecs ": self.rvecs,
+                                                                      "tvecs" : self.tvecs}
                                                                       )
                                                   )
                     self.total_fotos_analisis += 1
