@@ -59,7 +59,7 @@ class FotoTransformData(Foto,
         args["width"] = self.width
         CalibrateFoto.__init__(self, *[], **args)
         args["foto_calibrada"] = self.foto_calibrada_recortada
-        args["distancia"] = 50
+        args["distancia"] = 2
         args["min_group_pixel_size"] = 10
         Segmentacion.__init__(self,*[], **args )
         
@@ -85,7 +85,7 @@ class FotoTransformData(Foto,
             if self.index==2:
                 self.segmentacion()
                 self.index += 1
-                return self.foto,
+                return self.foto_calibrada_recortada_segmentada
             if self.index==3:
                 self.index += 1
                 return self.foto,

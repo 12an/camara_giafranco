@@ -33,7 +33,7 @@ class LuminosidadFotos:
 
     def normalizacion_Luminosidad(self):
         numero_pixeles = self.img_yuv[:,:,0].size
-        histograma_normalizado = self.histo_y_ac / numero_pixeles * 200
+        histograma_normalizado = self.histo_y_ac / numero_pixeles * 250
         for i in range(0, self.foto.shape[0]):
             for j in range(0, self.foto.shape[1]):
                 self.img_yuv[:,:,0][i,j] = histograma_normalizado[self.img_yuv[:,:,0][i,j]]
@@ -50,7 +50,7 @@ class FiltroFotos:
         self.histograma_bilateral()
 
     def bilateral_filtro(self):
-        self.foto_norm_bilate = cv2.bilateralFilter(self.foto_normalizada,95,80,80)
+        self.foto_norm_bilate = cv2.bilateralFilter(self.foto_normalizada,10,80,80)
 
     def histograma_bilateral(self):
         self.histo_norma_bilater = np.zeros(256, int)
@@ -114,10 +114,10 @@ class Segmentacion():
                 min_group_pixel_size,
                 *arg,
                 **args):
-        self.foto__ = cv2.cvtColor(foto_calibrada, cv2.COLOR_BGR2HSV)
-        self.foto_calibrada_recortada_segmentada = cv2.cvtColor(foto_calibrada, cv2.COLOR_BGR2HSV)[:,:,0]
+
+        self.foto_calibrada_recortada_segmentada = foto_calibrada#cv2.cvtColor(foto_calibrada, cv2.COLOR_BGR2HSV)
         #reshaping foto from 3 dimensions to 2 dimensions
-        self.foto_reshaped = self.foto_calibrada_recortada_segmentada.reshape((self.foto_calibrada_recortada_segmentada.shape[0] * self.foto_calibrada_recortada_segmentada.shape[1],1))
+        self.foto_reshaped = self.foto_calibrada_recortada_segmentada.reshape((-1,3))
         #converting to float
         self.foto_reshaped = np.float32(self.foto_reshaped)
         self.distancia = distancia
@@ -125,7 +125,7 @@ class Segmentacion():
         self.colores_dictionario_labels = {}
 
     def segmentacion(self):
-        self.clustering = DBSCAN(eps = self.distancia, min_samples = self.min_group_pixel_size, p = 2)
+        self.clustering = DBSCAN(eps = self.distancia, min_samples = self.min_group_pixel_size, p = 3)
         self.clustering.fit(self.foto_reshaped)
         self.reshaped_result = self.clustering.labels_.reshape((self.foto_calibrada_recortada_segmentada.shape[0], self.foto_calibrada_recortada_segmentada.shape[1]))
         #redrwing picture
@@ -134,6 +134,6 @@ class Segmentacion():
                 if self.colores_dictionario_labels.get(self.reshaped_result[i, j]) is None:
                     self.colores_dictionario_labels[self.reshaped_result[i, j]] = self.foto_calibrada_recortada_segmentada[i, j]
                 else:
+                    #self.colores_dictionario_labels[self.reshaped_result[i, j]] = (self.colores_dictionario_labels.get(self.reshaped_result[i, j]) + self.foto__[i, j])/2
                     self.foto_calibrada_recortada_segmentada[i, j] = self.colores_dictionario_labels.get(self.reshaped_result[i, j])
-        self.foto__[:,:,0] = self.foto_calibrada_recortada_segmentada     
-        cv2.imshow("ajaj", cv2.cvtColor(self.foto__, cv2.COLOR_HSV2BGR))
+        cv2.imshow("segmentacion", self.foto_calibrada_recortada_segmentada)

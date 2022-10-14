@@ -6,6 +6,7 @@ from DataModel import DatosControl
 from widget import Widget
 from camera import CameraIntrisicsValue
 import cv2
+from PIL import Image as im
 
 class ControlModel(DatosControl, Widget):
 
@@ -79,7 +80,7 @@ class ControlModel(DatosControl, Widget):
     def boton_event_siguinte_tag3(self):
         if(self.index_tag3<self.total_fotos_analisis):
             foto = next(self.imagenes_analisis[self.index_tag3])
-            self.Show_frames(foto, 6)
+            self.Show_frames(im.fromarray(foto), 6)
             self.index_tag3 += 1
 
     def boton_event_siguinte_tag4(self):

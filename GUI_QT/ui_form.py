@@ -147,7 +147,7 @@ class Ui_main_qwidget(object):
 
         self.retranslateUi(main_qwidget)
 
-        self.taps_.setCurrentIndex(0)
+        self.taps_.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(main_qwidget)

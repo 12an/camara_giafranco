@@ -69,21 +69,42 @@ class Widget(QWidget):
         self.ui.config_camera_result_layout_tag5.addWidget(self.label_image[9],
                                     1,
                                     1)
-    def Show_frames(self, frame, index_layout):      
+    def Show_frames(self, frame, index_layout, scalar = True, bit_image=False):      
         try:
             bytesPerLine = frame.shape[1] * frame.shape[2]
         except AttributeError as error_list:
             print(error_list)
         else:
-            ima = QtGui.QImage(frame,
-                               frame.shape[1],
-                               frame.shape[0],
-                               bytesPerLine,
-                               QtGui.QImage.Format_RGB888)
+            if not(bit_image):
+                ima = QtGui.QImage(frame,
+                                   frame.shape[1],
+                                   frame.shape[0],
+                                   bytesPerLine,
+                                   QtGui.QImage.Format_RGB888)
+            else:
+                ima = QtGui.QImage(frame,
+                                   frame.shape[1],
+                                   frame.shape[0],
+                                   bytesPerLine,
+                                   QtGui.QImage.Format_RGB32)
             imagen = QtGui.QPixmap.fromImage(ima)
-            imagen_scalada = imagen.scaled(469, 469, Qt.KeepAspectRatio)
-            self.label_image[index_layout].setPixmap(imagen_scalada)
+            if scalar:
+                imagen = imagen.scaled(469, 469, Qt.KeepAspectRatio)
 
+            self.label_image[index_layout].setPixmap(imagen)
+
+    def Show_frames_(self, frame, index_layout, scalar = True, bit_image=False):      
+        try:
+            bytesPerLine = frame.shape[1] * frame.shape[2]
+        except AttributeError as error_list:
+            print(error_list)
+        else:
+
+            imagen = QtGui.QPixmap.fromImage(frame)
+
+
+            self.label_image[index_layout].setPixmap(imagen)
+            
     def show_plot(self, canvas_plot, index_layout):
         self.plot_layout[index_layout].addWidget(canvas_plot,
                                                  1,
